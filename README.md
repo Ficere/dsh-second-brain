@@ -20,8 +20,8 @@ English: A second-brain scaffold whose workflows live as Agent Skills under `.ag
 | `projects/` | 一个项目一个文件（status / last stopped / next） |
 | `drafts/` | 写作草稿 |
 | `.memory/` | 可选文件记忆：会话开始读 `MEMORY.md`；只有明确要求「记住」时才写入 |
-| `.agents/skills/` | DSH / Cursor 读取的三个工作流 skill |
-| `grok-bot/dsh-second-brain/SKILL.md` | Grok Bot 编排配方：脚手架布局并安装上述技能；不是三个 skill 的副本 |
+| `SKILL.md` | 安装用的 setup skill：在目标项目里搭布局，并确保三个工作流在 `.agents/skills/` |
+| `.agents/skills/` | 三个工作流 skill（DSH / Cursor 发现路径） |
 
 知识目录（`notes/`、`people/`、`projects/`、`drafts/`、`.memory/`）是第二脑的数据层，不是 skill 包。
 
@@ -34,6 +34,7 @@ English: A second-brain scaffold whose workflows live as Agent Skills under `.ag
 | `weekly-review` | Weekly review — summarize projects/ progress, blockers, next steps; append new decisions; write drafts/weekly-YYYY-MM-DD.md | 做周回顾：汇总进展、标出阻塞和久未联系的人；确认后再追加决策 | `projects/`、`people/`、`decisions.md`、`drafts/`；若有 `.memory/` 则追加一行日志 |
 | `people-notes` | Create or update people/ notes — one person or company per file; keep last-contact and open threads current | 新建或更新某人或某组织的笔记 | `people/`（可从 `people/_template.md` 起稿） |
 | `draft-writing` | Draft writing into drafts/ using project voice from AGENTS.md and relevant notes/projects; leave publish to the user | 按项目语气起草，留给用户自己发布 | `AGENTS.md`，以及点名的 `notes/` 或 `projects/`、`drafts/` |
+| `dsh-second-brain` | Use when setting up or extending a second-brain layout: scaffold AGENTS.md and knowledge dirs, and install or ensure weekly-review, people-notes, and draft-writing under .agents/skills/. | 把这套布局装进一个项目：写短 `AGENTS.md`、建知识目录、放上三个工作流 | 目标项目根目录；技能写入 `.agents/skills/` |
 
 ## 安装与发现路径
 
@@ -71,9 +72,9 @@ DSH 指令文件合计约 **64 KB**。`AGENTS.md` 只放常驻地图；长流程
 
 「不要改写 `decisions.md` 旧行」是软规则。删除、强推、改写历史这类硬限制靠 approval policy，不靠提示词单独成立。
 
-## `grok-bot/` 分工
+## Setup skill
 
-`grok-bot/dsh-second-brain/SKILL.md` 是 Grok Bot 的编排配方：在目标项目里搭这套布局、安装三个技能，并按选择接上记忆。它**不是** `weekly-review`、`people-notes`、`draft-writing` 的副本。DSH 只读 `.agents/skills/`。
+仓库根目录的 `SKILL.md`（`dsh-second-brain`）用来把这套布局装进目标项目：短 `AGENTS.md`、知识目录，以及 `.agents/skills/` 下的三个工作流。它不包含这三个工作流的正文。
 
 ## License / 贡献
 
