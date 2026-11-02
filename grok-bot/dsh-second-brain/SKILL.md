@@ -10,6 +10,10 @@ description: >-
 
 Build or extend a Claude Second Brain–style layered memory inside a DeepSeek Harness (DSH) project: short global map, on-demand workflow skills, and file-backed memory (DSH has no built-in auto-memory).
 
+Layout follows [Agent Skills](https://agentskills.io/specification): each skill is `<name>/SKILL.md` (optional `references/` / `scripts/` / `assets/` only when needed). Prefer `.agents/skills/` for DSH + Cursor discovery. Do not invent a parallel root `skills/` tree unless the user asks for Anthropic marketplace packaging.
+
+Public reference pack: https://github.com/Ficere/dsh-second-brain
+
 ## When to load
 
 - User wants a DSH “第二大脑” / second brain / AGENTS.md + skills layout
@@ -21,6 +25,7 @@ Build or extend a Claude Second Brain–style layered memory inside a DeepSeek H
 1. Scaffold a lean project map and knowledge folders.
 2. Install reusable DSH skill bundles (`<name>/SKILL.md`, kebab-case, frontmatter `name` + `description`).
 3. Wire optional cross-session memory (file skill or community plugin)—never invent a fake auto-memory layer.
+4. Ship a README with a skill index whose descriptions match frontmatter exactly; keep `grok-bot/` (if present) clearly labeled as orchestrator-only.
 
 Keep paths and tone generic. Put person-specific focus items, repo paths, and approval policies in the target project’s files—not hard-coded in this recipe.
 
@@ -30,7 +35,7 @@ Keep paths and tone generic. Put person-specific focus items, repo paths, and ap
 | --- | --- | --- |
 | Global map | `CLAUDE.md` | Root `AGENTS.md` (keep short; total instruction files ≤ ~64 KB) |
 | Local rules | `.claude/rules/` + paths | No equivalent path loader—encode as skills or a nested `AGENTS.md` only if verified |
-| Workflows | `.claude/skills/` | Prefer `.agents/skills/<name>/SKILL.md` (also works for Codex); `.dsh/skills/` ranks higher if DSH-only |
+| Workflows | `.claude/skills/` | Prefer `.agents/skills/<name>/SKILL.md` (also works for Codex/Cursor); `.dsh/skills/` ranks higher if DSH-only |
 | Auto memory | Auto memory | Manual files and/or a memory skill/plugin |
 
 Discovery ranks (local provider): `.dsh/skills` (100) → `.agents/skills` (200) → custom → `~/.dsh/skills` → `~/.agents/skills`. Bundles are one level only (`name/SKILL.md`); no nested recursive discovery. Skills reload each step—no restart needed after edits.
@@ -51,6 +56,8 @@ If they already answered, proceed.
 
 ```text
 <project-root>/
+├── README.md              # skill index + install paths (see Part E)
+├── CONTRIBUTING.md        # optional but preferred for public packs
 ├── AGENTS.md
 ├── CLAUDE.md          # optional symlink → AGENTS.md if they also use Claude Code
 ├── decisions.md
@@ -67,7 +74,7 @@ If they already answered, proceed.
     └── draft-writing/
 ```
 
-Create missing dirs. Do not overwrite non-empty `AGENTS.md` or `decisions.md` without confirming; offer merge/diff instead.
+Create missing dirs. Do not overwrite non-empty `AGENTS.md` or `decisions.md` without confirming; offer merge/diff instead. Do **not** empty-create `scripts/` / `assets/` / `evals/` under skills.
 
 ### 2. Write lean `AGENTS.md`
 
@@ -114,7 +121,7 @@ Optional: `CLAUDE.md` → symlink to `AGENTS.md` so Claude Code and DSH share on
 
 ## Part B — Install workflow skills
 
-Write each as `<skill-root>/<name>/SKILL.md`. Frontmatter: `name`, `description`; set `user-invocable: true` when the user should call it by name. Bodies are instructions for the DSH agent, not Grok Bot tool calls.
+Write each as `<skill-root>/<name>/SKILL.md`. Frontmatter: `name`, `description`; set `user-invocable: true` when the user should call it by name. Bodies are instructions for the DSH agent, not Grok Bot tool calls. Folder name must equal frontmatter `name`.
 
 ### `weekly-review`
 
@@ -158,7 +165,7 @@ user-invocable: true
 3. Do not publish, send, or post. Return the path and a 2–3 line summary of what is still open.
 ```
 
-After writing, list the skill paths and remind: invoke via DSH skill catalog / `skill({ name })` or user command; catalogs refresh without restart.
+After writing, list the skill paths and remind: invoke via DSH skill catalog / `skill({ name })` or user command; catalogs refresh without restart. Only add `references/` when a body would exceed ~500 lines.
 
 ## Part C — Cross-session memory
 
@@ -181,17 +188,33 @@ After scaffold + skills, run or instruct these checks in the target project:
 
 Report what was created, what was skipped, and any confirmation still needed.
 
+## Part E — README for public / shared packs
+
+When scaffolding a shareable repo (or refreshing https://github.com/Ficere/dsh-second-brain), write README with this outline:
+
+1. One-line positioning (EN + ZH ok)
+2. Directory map (path → role)
+3. Skill index table: name | description (verbatim from frontmatter) | when to use | deps
+4. Install + discovery paths (DSH order; Cursor also scans `.agents/skills`)
+5. One example invoke per skill
+6. How to add a skill (naming, frontmatter, when to split references)
+7. Instruction budget + hard constraints
+8. If a `grok-bot/` orchestrator copy exists: state clearly it is **not** a duplicate of the three DSH skills
+9. License / CONTRIBUTING
+
 ## Hard constraints
 
 - Never bloat `AGENTS.md` with long procedures—move them into skills.
 - Never treat markdown “禁止 …” as a technical sandbox; call out approval policy for deletes/force-pushes/history edits.
 - Never overwrite user content without confirm.
 - Never install third-party skills/plugins without an explicit yes.
+- Never empty-create `scripts/` / `assets/` / `evals/`.
 - Deliverable for the human: concrete paths written + how to invoke each skill in DSH.
 
 ## Done criteria
 
 - Layout exists; `AGENTS.md` is short and accurate
-- At least the three workflow skills exist under the chosen skill root with valid frontmatter
+- At least the three workflow skills exist under the chosen skill root with valid frontmatter matching folder names
 - Memory approach is stated and files/plugin path match the choice
+- Shared packs have a README skill index aligned with frontmatter
 - User gets a brief handoff: what to fill under Current focus, and which smoke check to run first (prefer memory + decisions integrity)
