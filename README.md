@@ -19,7 +19,11 @@ English: A second-brain scaffold whose workflows live as Agent Skills under `.ag
 | `people/` | 一个人或组织一个文件 |
 | `projects/` | 一个项目一个文件（status / last stopped / next） |
 | `drafts/` | 写作草稿 |
-| `.memory/` | 可选文件记忆：会话开始读 `MEMORY.md`；只有明确要求「记住」时才写入 |
+| `.memory/` | 可选**工作区**文件记忆：会话开始读 `MEMORY.md`；「记住」默认写这里 |
+| `~/.dsh/global-memory/` | **本机全局**图记忆（跨工作区）；见 `docs/global-memory.md` |
+| `plugins/dsh-second-brain-memory/` | DSH Web Cordis 插件：Memory 页（列表/图谱/时间线） |
+| `.agents/skills/global-memory/` | 全局记忆 agent 协议 |
+| `scripts/global_memory.py` | upsert / query / pin / compact / stats |
 | `SKILL.md` | 安装用的 setup skill：在目标项目里搭布局，并确保三个工作流在 `.agents/skills/` |
 | `.agents/skills/` | 三个工作流 skill（DSH / Cursor 发现路径） |
 
@@ -34,6 +38,7 @@ English: A second-brain scaffold whose workflows live as Agent Skills under `.ag
 | `weekly-review` | Weekly review — summarize projects/ progress, blockers, next steps; append new decisions; write drafts/weekly-YYYY-MM-DD.md | 做周回顾：汇总进展、标出阻塞和久未联系的人；确认后再追加决策 | `projects/`、`people/`、`decisions.md`、`drafts/`；若有 `.memory/` 则追加一行日志 |
 | `people-notes` | Create or update people/ notes — one person or company per file; keep last-contact and open threads current | 新建或更新某人或某组织的笔记 | `people/`（可从 `people/_template.md` 起稿） |
 | `draft-writing` | Draft writing into drafts/ using project voice from AGENTS.md and relevant notes/projects; leave publish to the user | 按项目语气起草，留给用户自己发布 | `AGENTS.md`，以及点名的 `notes/` 或 `projects/`、`drafts/` |
+| `global-memory` | Machine-global cross-workspace memory for DSH (GUI-first): upsert/query/pin/compact under ~/.dsh/global-memory with a graph store; use with plugin Memory tab or scripts/global_memory.py. | Web 会话跨工作区记忆；「记到全局」；Memory 页 | `~/.dsh/global-memory/`；可选插件 |
 | `dsh-second-brain` | Use when setting up or extending a second-brain layout: scaffold AGENTS.md and knowledge dirs, and install or ensure weekly-review, people-notes, and draft-writing under .agents/skills/. | 把这套布局装进一个项目：写短 `AGENTS.md`、建知识目录、放上三个工作流 | 目标项目根目录；技能写入 `.agents/skills/` |
 
 ## 安装与发现路径
@@ -45,6 +50,16 @@ git clone https://github.com/Ficere/dsh-second-brain.git
 ```
 
 DSH 本地发现顺序：`.dsh/skills` → `.agents/skills` → 自定义路径 → `~/.dsh/skills` → `~/.agents/skills`。本仓库的三个技能在 `.agents/skills/`。Cursor 也会扫描 `.agents/skills`，以及 `.cursor/skills`，并兼容 `.claude/skills`。
+
+## 全局记忆插件（Web）
+
+```bash
+dsh plugin --profile web add ./plugins/dsh-second-brain-memory
+python3 scripts/global_memory.py init
+dsh web
+```
+
+会话视图中打开 **Memory / 全局记忆**（与 Trajectory 执行图谱分开）。机制说明：`docs/global-memory.md`。
 
 ## 如何调用
 

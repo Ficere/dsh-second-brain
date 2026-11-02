@@ -35,7 +35,7 @@ Keep paths and tone generic. Put person-specific focus, repo paths, and approval
 | Global map | `CLAUDE.md` | Root `AGENTS.md` (keep short; DSH instruction files ≤ ~64 KB) |
 | Local rules | `.claude/rules/` + paths | Encode as skills, or a nested `AGENTS.md` only if that loader is verified |
 | Workflows | `.claude/skills/` | `.agents/skills/<name>/SKILL.md` (Cursor and DSH). `.dsh/skills/` ranks higher for DSH-only |
-| Memory | Auto memory | Manual files under `.memory/` |
+| Memory | Auto memory | Workspace `.memory/` + optional machine-global `~/.dsh/global-memory/` (skill/plugin) |
 
 DSH local discovery order: `.dsh/skills` → `.agents/skills` → custom paths → `~/.dsh/skills` → `~/.agents/skills`. Bundles are one level (`name/SKILL.md`). Skills reload each step.
 
@@ -45,7 +45,7 @@ Ask one question only if the answer is missing:
 
 1. Target root: existing git project, or a new `second-brain/` folder.
 2. Skill root: `.agents/skills` (default) or `.dsh/skills` (DSH-first).
-3. Memory: (A) `.memory/` plus a line in `AGENTS.md`, or (B) another memory skill the user names. Do not install third-party skills without an explicit yes.
+3. Memory: (A) `.memory/` plus a line in `AGENTS.md`, (B) another memory skill the user names, or (C) global graph skill/plugin for cross-workspace. Do not install third-party skills without an explicit yes.
 
 If they already answered, proceed.
 
@@ -129,8 +129,9 @@ There is no automatic chat memory. Use the option the user chose:
 
 - **A — Files only:** `.memory/MEMORY.md` and `.memory/logs/`, plus the `AGENTS.md` bullet to read memory at session start and append when asked to remember.
 - **B — Another skill:** install only the memory skill they named, and only after they agree.
+- **C — Global graph (recommended for cross-workspace):** install `.agents/skills/global-memory` and optionally the Cordis plugin `plugins/dsh-second-brain-memory` into the **web** profile (`dsh plugin --profile web add …`). Store lives at `~/.dsh/global-memory/` (graph + nodes). GUI session start loads a compact index;「记到全局」upserts. Memory tab (List/Graph/Timeline) is separate from Trajectory. See `docs/global-memory.md`.
 
-Tell them to open the files on disk. A claim in chat is not a write.
+Tell them to open the files on disk (or the Memory tab). A claim in chat is not a write.
 
 ## Part D — Smoke checks
 

@@ -1,0 +1,5 @@
+# Registers Memory / 全局记忆 as an additive conversation.view seat
+# (same pattern as dsh-memory / trajectory-graph). Does not replace Chat or Trajectory.
+- insert:
+  - id: ui-second-brain-memory
+    name: dsh-second-brain-memory

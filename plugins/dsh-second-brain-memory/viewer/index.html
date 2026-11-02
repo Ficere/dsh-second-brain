@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DSH Second Brain · 全局记忆</title>
+  <style>html,body{height:100%;margin:0;background:#121212;font-family:system-ui,sans-serif}</style>
+</head>
+<body>
+  <div id="app" style="height:100%"></div>
+  <script src="../lib/client.js"></script>
+  <script>
+    // Prefer live API; else load ?graph= URL or embedded sample
+    async function main() {
+      const el = document.getElementById('app')
+      const params = new URLSearchParams(location.search)
+      let initialGraph = null
+      if (params.get('graph')) {
+        const r = await fetch(params.get('graph'))
+        initialGraph = await r.json()
+      }
+      DshSecondBrainMemory.MemoryApp(el, {
+        apiBase: params.get('api') || '/api/second-brain-memory',
+        initialGraph,
+      })
+    }
+    main()
+  </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+# Copy to ~/.dsh/global-memory/config.yaml (or run: python3 scripts/global_memory.py init)
+enabled: true
+root: ~/.dsh/global-memory
+budgets:
+  max_total_bytes: 512000
+  max_nodes: 200
+  max_node_bytes: 4000
+  index_preview_chars: 160
+retention:
+  peripheral_max_age_days: 30
+  peripheral_importance_max: 2
+  keep_pinned: true
+  archive_on_compact: true
+defaults:
+  importance: 3
+  type: fact
+priority:
+  workspace_over_global: true
+  promote_phrase: 记到全局
